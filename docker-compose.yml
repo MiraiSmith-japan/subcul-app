@@ -1,0 +1,12 @@
+version: '3'
+services:
+  backend:
+    container_name: backend
+    build:
+      context: .
+      dockerfile: ./backend/dockerfile
+    tty: true
+    env_file:
+      - ./backend/.backend_env
+    environment:
+      - TZ=Asia/Tokyo
