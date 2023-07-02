@@ -3,10 +3,13 @@ services:
   backend:
     container_name: backend
     build:
-      context: .
-      dockerfile: ./backend/dockerfile
+      context: ./backend
+      dockerfile: Dockerfile.dev
+    ports:
+      - "1991:1991"
+    volumes:
+      - ./backend:/api
     tty: true
-    env_file:
-      - ./backend/.backend_env
+    working_dir: /api
     environment:
       - TZ=Asia/Tokyo
