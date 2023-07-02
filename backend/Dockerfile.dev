@@ -1,0 +1,20 @@
+FROM golang:1.18-alpine as build-reflex
+RUN apk update && \
+    apk upgrade && \
+    apk add bash git gcc musl-dev && \
+    rm -rf /var/cache/apk/*
+
+RUN go install github.com/go-swagger/go-swagger/cmd/swagger@latest
+RUN go install github.com/cosmtrek/air@latest
+
+FROM golang:1.18-alpine
+COPY --from=build-reflex /go/bin/swagger /go/bin/swagger
+COPY --from=build-reflex /go/bin/air /go/bin/air
+
+ENV GOOS=linux \
+    GOARCH=amd64 \
+    CGO_ENABLED=0
+
+WORKDIR /api
+
+CMD ["air", "-c", ".air.toml"]
