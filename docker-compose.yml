@@ -13,3 +13,24 @@ services:
     working_dir: /api
     environment:
       - TZ=Asia/Tokyo
+  # シェアぽのコピペ
+  frontend:
+    container_name: frontend
+    build:
+      #カレントなワークディレクトリ（現在作業しているディレクトリのこと・ここではフロントエンド配下にあるドッカーファイルを指定している）
+      context: ./frontend
+      #backendではDockerfile.devなので名前を揃えた方がいいのか聞く
+      dockerfile: Dockerfile
+    #必要ないかも
+    image: nextjs-app 
+    #自分のPCディレクトリ：コンテナ内にマウントしたいデイレクトり 
+    #フロントエンドが書き換えられた時、それをappに反映する（マウントする）
+    #node_moduleが書き換えられた場合、app/node_modulesに反映する
+    volumes:
+      - ./frontend/:/app
+      - ./frontend/node_modules:/app/node_modules
+    #compose upした際 npm run devが実行
+    command: sh -c "npm run dev"
+    tty: true
+    ports:
+      - "8200:3000"
